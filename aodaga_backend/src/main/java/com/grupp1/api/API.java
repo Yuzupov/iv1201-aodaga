@@ -7,6 +7,7 @@ import com.grupp1.Controller;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +59,18 @@ public class API {
   String decryptString(String cipher) throws JsonProcessingException, BadApiInputException {
     Map<String, String> jsoncrypt;
     jsoncrypt = new ObjectMapper().readValue(cipher, HashMap.class);
-    return Crypt.decrypt(jsoncrypt.get("cipher"), jsoncrypt.get("iv"));
+    if (jsoncrypt.get("cipher") == null) {
+      throw new BadApiInputException("no 'cipher' supplied");
+    }
+    if (jsoncrypt.get("iv") == null) {
+      throw new BadApiInputException("no 'iv' supplied");
+    }
+    if (jsoncrypt.get("key") == null) {
+      throw new BadApiInputException("no 'iv' supplied");
+    }
+    String sKey = Crypt.decryptRSA(jsoncrypt.get("key"));
+    System.out.println("key :" + sKey);
+    return Crypt.decrypt(jsoncrypt.get("cipher"), jsoncrypt.get("iv"), sKey);
   }
 
   String register(Request req, Response res) {
