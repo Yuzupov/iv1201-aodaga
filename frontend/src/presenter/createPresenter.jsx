@@ -1,9 +1,19 @@
 import frontEndModel from "../model/frontEndModel.js";
-
+/**
+ * @constant
+ * @name CreatePresenter
+ * Creates a presenter for the registration form in the view
+ * @returns nothing 
+ */
 const CreatePresenter = {
+  /**
+   * @function
+   * @name submitForm
+   * @param {object} formData 
+   * @returns Either a confirmation or error message to the view.
+   */
   submitForm: async (formData, onSuccess, onError) => {
     try {
-      frontEndModel.setAndEncryptUserData(formData);
       if (formData.userPassword !== formData.confirmUserPassword) {
         throw new Error("Passwords do not match");
       }
@@ -13,11 +23,8 @@ const CreatePresenter = {
       const pnrRegex = new RegExp('\\d{8}-\\d{4}');
       if (!pnrRegex.test(formData.personalNumber)) {
         throw new Error("Invalid personalnumber format")
-      } 
-      frontEndModel.setField(formData);
-      // for (const [field, value] of Object.entries(formData)) {
-      //   frontEndModel.setField({ field, value });
-      // }
+      }
+      frontEndModel.setAndEncryptUserData(formData);
       const response = await frontEndModel.registerUser();
       onSuccess(response);
     } catch (error) {
