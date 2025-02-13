@@ -81,12 +81,13 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 			confirmUserPassword: this.fields.userCredentials.confirmUserPassword,
 
 		});
+		var iv = CryptoJS.enc.Hex.parse(this.createRandomString(32));
 		const cipherJSON = CryptoJS.AES.encrypt(plainJSON, CryptoJS.enc.Hex.parse(encString), { iv: iv });
 		const cryptedKey = crypt.encrypt(encString);
-	
+
 		this.fields.JSONCipherObject.cipher = cipherJSON.ciphertext.toString(CryptoJS.enc.Base64);
- 		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString();
- 		this.fields.JSONCipherObject.key = cryptedKey; 
+		this.fields.JSONCipherObject.iv = cipherJSON.iv.toString();
+		this.fields.JSONCipherObject.key = cryptedKey; 
 
 	},
 	/**
@@ -126,7 +127,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 						username: this.fields.userCredentials.username,
 						userPassword: this.fields.userCredentials.userPassword,
 					})
-					
+
 				}
 			);
 			if (!response.ok) {
@@ -152,7 +153,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 						email: this.fields.userCredentials.email,
 						userPassword: this.fields.userCredentials.userPassword,
 					})
-					
+
 				}
 			);
 			if (!response.ok) {
@@ -218,7 +219,7 @@ GTdL1HmiWVEt3kXcHwIDAQAB
 			const parsedData = this.parseData(response);
 			console.log(parsedData);
 			return parsedData;
-			
+
 		} catch (error) {
 			console.error(`Error when requesting applicants: ${error}`);	
 			throw error;
