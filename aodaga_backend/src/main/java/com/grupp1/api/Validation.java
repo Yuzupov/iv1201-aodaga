@@ -1,5 +1,8 @@
 package com.grupp1.api;
 
+import com.grupp1.api.Tokenizer.TokenDTO;
+import java.time.Instant;
+import org.apache.commons.lang3.SerializationUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,7 +61,11 @@ class Validation {
         throw new ValidationException("missing '" + field + "' parameter");
       }
     }
-
   }
-
+  static boolean validateToken(byte[] token, String username){
+    TokenDTO deserializedToken = SerializationUtils.deserialize(token);
+    boolean validTime = deserializedToken.expirationDate > Instant.now().getEpochSecond();
+    boolean validName = deserializedToken.username.equals(username);
+    return validName && validTime;
+  }
 }
